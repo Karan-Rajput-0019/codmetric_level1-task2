@@ -1,0 +1,254 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Recipe Gallery — Multiple Dishes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#071827; --card:#0b1220; --muted:#94a3b8; --accent:#ffb86b;
+      --accent-2:#7dd3fc; --text:#e6eef8; --radius:12px; --gap:18px;
+      --max-width:1100px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:linear-gradient(180deg,#071025 0%, #071827 60%); color:var(--text);
+      padding:28px; display:flex; justify-content:center;
+    }
+    .container{width:100%;max-width:var(--max-width);display:grid;gap:var(--gap)}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px;border-radius:12px;background:linear-gradient(90deg, rgba(255,184,107,0.04), rgba(125,211,252,0.03));}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;font-weight:700;color:#08202a}
+    h1{font-size:1.1rem;margin:0}
+    .lead{color:var(--muted);font-size:0.95rem;margin:0}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+
+    /* Recipe card list */
+    .cards{
+      display:grid;
+      grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+      gap:14px;
+      align-self:start;
+    }
+
+    .card{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius); padding:12px; border:1px solid rgba(255,255,255,0.03);
+      display:flex; flex-direction:column; gap:10px; cursor:pointer;
+    }
+    .thumb{width:100%;height:140px;overflow:hidden;border-radius:8px;background:#081021}
+    .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+    .card h3{margin:0;font-size:1rem}
+    .meta{display:flex;justify-content:space-between;color:var(--muted);font-size:0.85rem}
+
+    /* Detail pane */
+    .detail{
+      background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      border-radius:var(--radius); padding:16px; border:1px solid rgba(255,255,255,0.03);
+      min-height:420px; display:flex;flex-direction:column;gap:12px;
+    }
+    .detail .hero{display:grid;grid-template-columns: 1fr 1fr;gap:12px}
+    .dish-img{width:100%;height:260px;border-radius:10px;overflow:hidden;background:#081021}
+    .dish-img img{width:100%;height:100%;object-fit:cover;display:block}
+    .summary{display:flex;flex-direction:column;gap:8px}
+    .section-title{color:var(--accent);margin:0;font-size:0.98rem}
+    ul,ol{margin:0;padding-left:18px;color:var(--text)}
+    .controls{display:flex;gap:8px}
+    .btn{background:var(--accent);border:0;color:#081022;padding:8px 10px;border-radius:8px;font-weight:600;cursor:pointer}
+    .btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);color:var(--muted)}
+
+    footer{display:flex;justify-content:space-between;color:var(--muted);font-size:0.9rem;padding-top:6px}
+
+    @media (max-width:900px){
+      .grid{grid-template-columns:1fr}
+      .detail .hero{grid-template-columns:1fr}
+      .dish-img{height:200px}
+    }
+    @media (max-width:480px){
+      body{padding:16px}
+      .thumb{height:120px}
+      .dish-img{height:160px}
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header role="banner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">R</div>
+        <div>
+          <h1>Recipe Gallery</h1>
+          <div class="lead">Click a card to view full recipe details. Place local images dish1.jpg dish2.jpg dish3.jpg in the same folder.</div>
+        </div>
+      </div>
+      <div class="meta">Multiple dishes · Semantic HTML</div>
+    </header>
+
+    <div class="grid" role="main">
+      <!-- Left: list of dishes -->
+      <nav aria-label="Recipes" class="cards" id="recipeList">
+        <!-- Cards inserted by JS or can be hard-coded -->
+        <article class="card" data-id="0" tabindex="0" aria-labelledby="r0">
+          <div class="thumb"><img src="dish1.jpg" alt="Dish 1 photo"></div>
+          <h3 id="r0">Spiced Chickpea Curry</h3>
+          <div class="meta"><span>30 min</span><span>Vegetarian</span></div>
+        </article>
+
+        <article class="card" data-id="1" tabindex="0" aria-labelledby="r1">
+          <div class="thumb"><img src="dish2.jpg" alt="Dish 2 photo"></div>
+          <h3 id="r1">Lemon Herb Salmon</h3>
+          <div class="meta"><span>25 min</span><span>Seafood</span></div>
+        </article>
+
+        <article class="card" data-id="2" tabindex="0" aria-labelledby="r2">
+          <div class="thumb"><img src="dish3.jpg" alt="Dish 3 photo"></div>
+          <h3 id="r2">Creamy Mushroom Pasta</h3>
+          <div class="meta"><span>20 min</span><span>Vegetarian</span></div>
+        </article>
+      </nav>
+
+      <!-- Right: recipe detail -->
+      <section class="detail" id="detail" aria-live="polite">
+        <div class="hero">
+          <div class="dish-img" id="detailImage"><img src="dish1.jpg" alt="Selected dish image"></div>
+          <div class="summary">
+            <h2 id="detailTitle">Spiced Chickpea Curry</h2>
+            <div class="meta"><span id="detailTime">30 min</span><span id="detailType">Vegetarian</span></div>
+            <p id="detailDesc" class="muted">A quick, nourishing vegetarian dinner — ready in 30 minutes.</p>
+            <div class="controls">
+              <button class="btn" onclick="printDetail()">Print</button>
+              <button class="btn ghost" id="saveBtn" onclick="saveCurrent()">Save</button>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="section-title">Ingredients</h3>
+          <ul id="detailIngredients">
+            <li>1 tbsp vegetable oil</li>
+            <li>1 small onion, finely chopped</li>
+            <li>2 garlic cloves, minced</li>
+            <li>1 tbsp grated ginger</li>
+            <li>1 tsp cumin; 1 tsp coriander; 1/2 tsp turmeric</li>
+            <li>1 can chickpeas; 1 can diced tomatoes; 150 ml coconut milk</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="section-title">Steps</h3>
+          <ol id="detailSteps">
+            <li>Heat oil; cook onion until soft.</li>
+            <li>Add garlic and ginger.</li>
+            <li>Add spices, toast briefly.</li>
+            <li>Add chickpeas and tomatoes; simmer.</li>
+            <li>Stir in coconut milk and finish.</li>
+          </ol>
+        </div>
+      </section>
+    </div>
+
+    <footer>
+      <div>Built with semantic HTML</div>
+      <div class="muted">Place dish1.jpg dish2.jpg dish3.jpg alongside this file</div>
+    </footer>
+  </div>
+
+  <script>
+    // Data for multiple recipes. Update text or image paths as needed.
+    const recipes = [
+      {
+        id:0, title:"Spiced Chickpea Curry", time:"30 min", type:"Vegetarian",
+        img:"dish1.jpg", desc:"A quick, nourishing vegetarian dinner — ready in 30 minutes.",
+        ingredients:[
+          "1 tbsp vegetable oil","1 small onion, finely chopped","2 garlic cloves, minced",
+          "1 tbsp grated ginger","1 tsp cumin; 1 tsp coriander; 1/2 tsp turmeric",
+          "1 can chickpeas, drained","1 can diced tomatoes","150 ml coconut milk","Salt to taste"
+        ],
+        steps:[
+          "Heat oil in a pan and cook onion until soft (5–6 minutes).",
+          "Add garlic and ginger, cook 1 minute.",
+          "Stir in spices and toast 30 seconds.",
+          "Add chickpeas and tomatoes; simmer 8–10 minutes.",
+          "Add coconut milk, simmer 3–4 minutes and season."
+        ]
+      },
+      {
+        id:1, title:"Lemon Herb Salmon", time:"25 min", type:"Seafood",
+        img:"dish2.jpg", desc:"Light pan-seared salmon with bright lemon and herbs.",
+        ingredients:["2 salmon fillets","1 tbsp olive oil","1 lemon (zest + juice)","Salt and pepper","Fresh parsley"],
+        steps:["Season salmon; heat oil.","Cook skin-side down 4–5 minutes.","Flip and cook 2–3 minutes.","Finish with lemon juice and herbs."]
+      },
+      {
+        id:2, title:"Creamy Mushroom Pasta", time:"20 min", type:"Vegetarian",
+        img:"dish3.jpg", desc:"Silky mushroom sauce tossed with pasta.",
+        ingredients:["200 g pasta","250 g mushrooms sliced","1 tbsp butter","100 ml cream","Parmesan, salt, pepper"],
+        steps:["Cook pasta until al dente.","Sauté mushrooms in butter.","Add cream and simmer.","Toss pasta with sauce and serve with Parmesan."]
+      }
+    ];
+
+    const list = document.getElementById('recipeList');
+    const detailImage = document.getElementById('detailImage').querySelector('img');
+    const detailTitle = document.getElementById('detailTitle');
+    const detailTime = document.getElementById('detailTime');
+    const detailType = document.getElementById('detailType');
+    const detailDesc = document.getElementById('detailDesc');
+    const detailIngredients = document.getElementById('detailIngredients');
+    const detailSteps = document.getElementById('detailSteps');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // Helper to render list (keeps static HTML cards in-sync if you modify recipes data)
+    function renderList(){
+      const cards = Array.from(list.querySelectorAll('.card'));
+      cards.forEach(card=>{
+        const id = Number(card.dataset.id);
+        const r = recipes.find(x=>x.id===id);
+        if(r){
+          const img = card.querySelector('img'); if(img) img.src = r.img;
+          const title = card.querySelector('h3'); if(title) title.textContent = r.title;
+        }
+      });
+    }
+
+    // Load recipe into detail pane
+    function loadRecipe(id){
+      const r = recipes.find(x=>x.id===id); if(!r) return;
+      detailImage.src = r.img;
+      detailImage.alt = r.title + " image";
+      detailTitle.textContent = r.title;
+      detailTime.textContent = r.time;
+      detailType.textContent = r.type;
+      detailDesc.textContent = r.desc;
+
+      detailIngredients.innerHTML = r.ingredients.map(i=>`<li>${i}</li>`).join('');
+      detailSteps.innerHTML = r.steps.map(s=>`<li>${s}</li>`).join('');
+      saveBtn.textContent = 'Save';
+      saveBtn.disabled = false;
+    }
+
+    // Event delegation for selecting cards
+    list.addEventListener('click', e=>{
+      const card = e.target.closest('.card');
+      if(card) loadRecipe(Number(card.dataset.id));
+    });
+    list.addEventListener('keydown', e=>{
+      if(e.key === 'Enter'){
+        const card = e.target.closest('.card'); if(card) loadRecipe(Number(card.dataset.id));
+      }
+    });
+
+    function printDetail(){ window.print(); }
+    function saveCurrent(){ saveBtn.textContent='Saved'; saveBtn.disabled=true; }
+
+    // Initialize
+    renderList();
+    loadRecipe(0);
+  </script>
+</body>
+</html>
